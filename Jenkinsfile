@@ -23,6 +23,7 @@ pipeline {
                         aws --version
                         yum install jq -y
                         LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
+                        echo $LATEST_TD_REVISION
                         aws ecs update-service --cluster flashy-zebra-l90pw7 --service LearnJenkinsApp-TaskDefinition-Prod-service-zgodtkit --task-definition LearnJenkinsApp-TaskDefinition-Prod:$LATEST_TD_REVISION
                     '''
                 }
