@@ -8,6 +8,7 @@ pipeline {
         AWS_ECS_CLUSTER = 'flashy-zebra-l90pw7'
         AWS_ECS_SERVICE_PROD = 'LearnJenkinsApp-TaskDefinition-Prod-service-zgodtkit'
         AWS_ECS_TD_PROD = 'LearnJenkinsApp-TaskDefinition-Prod'
+        AWS_DOCKER_REGISTRY = '636653570213.dkr.ecr.ap-southeast-1.amazonaws.com'
     }
 
     stages {
@@ -43,7 +44,9 @@ pipeline {
 
             steps {
                 sh '''
-                    docker build -t $APP_NAME:$REACT_APP_VERSION .
+                    docker build -t $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION .
+                    aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_DOCKER_REGISTRY
+                    docker push $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION
                 '''
             }
         }
